@@ -20,6 +20,10 @@ def stop_robot():
     bot.endLoop()
     return { "status" : "stopped" }
 
+@app.route("/img", methods=['POST', 'GET'])
+def send_image():
+    return send_file("./img.jpg", mimetype='image/jpeg')
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True)
     bot.mainLoop()

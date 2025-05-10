@@ -2,6 +2,8 @@
 <html>
     <head>
         <script>
+            const IMG_SRC = "/img"
+
             const TalkToSlayMax = (route) => {
                 fetch(route, { method: "POST", headers: { "Content-Type" : "application/json" } })
                     .then(response => response.json())
@@ -17,10 +19,23 @@
                 console.log("stop robot");
                 TalkToSlayMax("/stop");
             };
+
+            const updateImage = () => {
+                try {
+                    const imageDiv = document.querySelector("#robot-cam");
+                    imageDiv.src = `${IMG_SRC}?time=${new Date()}`;
+                } catch (err) { console.warn(err + "\n image div not found") }
+                
+                console.log("got")
+                setTimeout(updateImage, 333);
+            }
+
+            updateImage();
         </script>
     </head>
     <body>
         <h2>Robot Page</h2>
+        <img src="/img" alt="img" id="robot-cam">
         <button onclick="startRobot()">Start Robot</button>
         <button onclick="stopRobot()">Stop Robot</button>
     </body>

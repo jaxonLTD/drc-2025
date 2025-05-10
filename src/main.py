@@ -31,6 +31,8 @@ class SlayMax:
                 cv2.imshow('RC Car Line Follower', processed_frame)
                 print(f"Steering: {steering:.2f} {'(FINISH DETECTED)' if finish else ''}")
 
+                cv2.imwrite("img.jpg", frame)
+
                 if (finish):
                     self.motorController.setServoMotor(angle=0.5)
                     self.motorController.off()
@@ -46,7 +48,7 @@ class SlayMax:
 
 def main():
     cap = cv2.VideoCapture(0)
-    motorController = motor_controller.DRCMotorController(motorPin=13, servoPin=12)
+    # motorController = motor_controller.DRCMotorController(motorPin=13, servoPin=12)
     
     if not cap.isOpened():
         print("Error: Could not open camera.")
@@ -63,7 +65,7 @@ def main():
         cv2.imshow('RC Car Line Follower', processed_frame)
         print(f"Steering: {steering:.2f} {'(FINISH DETECTED)' if finish else ''}")
 
-        
+        cv2.imwrite("img.jpg", processed_frame)
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
