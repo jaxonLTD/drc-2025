@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            const TalkToSlayMax = (route) => {
+                fetch(route, { method: "POST", headers: { "Content-Type" : "application/json" } })
+                    .then(response => response.json())
+                    .then(response => console.log(response));
+            }
+
+            const startRobot = () => {
+                console.log("starting robot");
+                TalkToSlayMax("/start");
+            };
+            
+            const stopRobot = () => {
+                console.log("stop robot");
+                TalkToSlayMax("/stop");
+            };
+        </script>
+    </head>
+    <body>
+        <h2>Robot Page</h2>
+        <button onclick="startRobot()">Start Robot</button>
+        <button onclick="stopRobot()">Stop Robot</button>
+    </body>
+</html>
