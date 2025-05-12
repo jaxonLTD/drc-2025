@@ -25,5 +25,4 @@ def send_image():
     return send_file("./img.jpg", mimetype='image/jpeg')
 
 if __name__ == "__main__":
-    bot.mainLoop()
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -17,7 +17,7 @@ class SlayMax:
 
     def mainLoop (self):
         while True:
-            cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+            cap = cv2.VideoCapture("/dev/video0")
             ret, frame = cap.read()
             if not ret:
                 print("Error: Failed to grab frame.")
