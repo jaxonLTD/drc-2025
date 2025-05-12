@@ -4,8 +4,7 @@ import cv2
 
 class SlayMax:
     def __init__ (self):
-        if (cv2.VideoCapture(1).isOpened()):
-            self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture("/dev/video1")
         
         self.motorController = motor_controller.DRCMotorController(motorPin=13, servoPin=12)
         self.started = False
