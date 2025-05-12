@@ -22,6 +22,7 @@ class SlayMax:
             ret, frame = self.cap.read()
             if not ret:
                 print("Error: Failed to grab frame.")
+                pass
             
             steering, processed_frame, finish = color_detection.process_frame(frame)
             
