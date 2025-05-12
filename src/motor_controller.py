@@ -19,4 +19,10 @@ class DRCMotorController:
         # self.motor.off()
         # self.servo.off()
         pass
+    
+    def on (self):
+        # self.motor.on()
+        # self.servo.on()
+        pass
+    
 
