@@ -4,8 +4,8 @@ import cv2
 
 class SlayMax:
     def __init__ (self):
-        if (cv2.VideoCapture("/dev/video2").isOpened()):
-            self.cap = cv2.VideoCapture("/dev/video2")
+        if (cv2.VideoCapture("/dev/video1").isOpened()):
+            self.cap = cv2.VideoCapture("/dev/video1")
         
         self.motorController = motor_controller.DRCMotorController(motorPin=13, servoPin=12)
         self.started = False
@@ -20,33 +20,32 @@ class SlayMax:
 
     def mainLoop (self):
         while True:
-            if (self.started):
-                ret, frame = self.cap.read()
-                if not ret:
-                    print("Error: Failed to grab frame.")
-                    break
-                
-                steering, processed_frame, finish = color_detection.process_frame(frame)
-                
-                cv2.imshow('RC Car Line Follower', processed_frame)
-                print(f"Steering: {steering:.2f} {'(FINISH DETECTED)' if finish else ''}")
-
-                cv2.imwrite("img.jpg", processed_frame)
-
-                if (finish):
-                    self.motorController.setServoMotor(angle=0.5)
-                    self.motorController.off()
-                    self.started = False
-
-                # change drive motor later
-                self.motorController.setServoMotor(angle=steering)
-            else:
+            ret, frame = self.cap.read()
+            if not ret:
+                print("Error: Failed to grab frame.")
                 break
+            
+            steering, processed_frame, finish = color_detection.process_frame(frame)
+            
+            cv2.imshow('RC Car Line Follower', processed_frame)
+            print(f"Steering: {steering:.2f} {'(FINISH DETECTED)' if finish else ''}")
+
+            cv2.imwrite("img.jpg", processed_frame)
+
+            if (finish):
+                self.motorController.setServoMotor(angle=0.5)
+                self.motorController.off()
+                self.started = False
+
+            if (self.started):
+                #change drive motor later
+                # self.motorController.setServoMotor(angle=steering)
+                pass
             
         
 
 def main():
-    cap = cv2.VideoCapture("/dev/video2")
+    cap = cv2.VideoCapture("/dev/video1")
     # motorController = motor_controller.DRCMotorController(motorPin=13, servoPin=12)
     
     if not cap.isOpened():
