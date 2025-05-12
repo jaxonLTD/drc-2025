@@ -26,7 +26,7 @@ class SlayMax:
             
             steering, processed_frame, finish = color_detection.process_frame(frame)
             
-            cv2.imshow('RC Car Line Follower', processed_frame)
+            # cv2.imshow('RC Car Line Follower', processed_frame)
             print(f"Steering: {steering:.2f} {'(FINISH DETECTED)' if finish else ''}")
 
             cv2.imwrite("img.jpg", processed_frame)
@@ -59,7 +59,7 @@ def main():
         
         steering, processed_frame, finish = color_detection.process_frame(frame)
 
-        cv2.imshow('RC Car Line Follower', processed_frame)
+        # cv2.imshow('RC Car Line Follower', processed_frame)
         print(f"Steering: {steering:.2f} {'(FINISH DETECTED)' if finish else ''}")
 
         cv2.imwrite("img.jpg", processed_frame)
