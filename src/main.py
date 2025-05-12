@@ -4,8 +4,6 @@ import cv2
 
 class SlayMax:
     def __init__ (self):
-        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-        
         self.motorController = motor_controller.DRCMotorController(motorPin=13, servoPin=12)
         self.started = False
 
@@ -19,7 +17,8 @@ class SlayMax:
 
     def mainLoop (self):
         while True:
-            ret, frame = self.cap.read()
+            cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+            ret, frame = cap.read()
             if not ret:
                 print("Error: Failed to grab frame.")
                 continue
