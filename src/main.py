@@ -46,7 +46,7 @@ class SlayMax:
         
 
 def main():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("/dev/video2")
     # motorController = motor_controller.DRCMotorController(motorPin=13, servoPin=12)
     
     if not cap.isOpened():
