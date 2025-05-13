@@ -5,7 +5,7 @@ class DRCMotorController:
     def __init__(self, motorPin, servoPin):
         # GPIO13 & GPIO12 preferable
         Device.pin_factory = RPiGPIOFactory()
-        self.motor = PWMOutputDevice(motorPin, frequency=50)
+        self.motor = PWMOutputDevice(motorPin, frequency=100)
         self.servo = Servo(servoPin) 
         pass
 
