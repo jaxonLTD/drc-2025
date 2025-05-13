@@ -30,7 +30,7 @@ class SlayMax:
             # cv2.imshow('RC Car Line Follower', processed_frame)
             print(f"Steering: {steering:.2f} {'(FINISH DETECTED)' if finish else ''}")
 
-            cv2.imwrite("img.jpg", processed_frame)
+            cv2.imwrite("img.jpg", frame)
 
             if (finish):
                 self.motorController.setServoMotor(angle=0.5)
