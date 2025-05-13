@@ -30,9 +30,9 @@ def process_frame(frame):
     yellow_mask = cv2.inRange(hsv_frame, yellow_lower, yellow_upper)
     green_mask = cv2.inRange(hsv_frame, green_lower, green_upper)
     
-    blue_detected = cv2.bitwise_and(frame, frame, mask=blue_mask)
-    yellow_detected = cv2.bitwise_and(frame, frame, mask=yellow_mask)
-    green_detected = cv2.bitwise_and(frame, frame, mask=green_mask)
+    # blue_detected = cv2.bitwise_and(frame, frame, mask=blue_mask)
+    # yellow_detected = cv2.bitwise_and(frame, frame, mask=yellow_mask)
+    # green_detected = cv2.bitwise_and(frame, frame, mask=green_mask)
     
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray_frame = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)  # bgr for displaying image
@@ -69,6 +69,7 @@ def process_frame(frame):
         steering_value = center_x / width
         
         # draw line for visuals
+        print("both colors detected")
         cv2.line(processed_frame, (width//2, height), (center_x, height - roi_height), (0, 255, 255), 2)
     
     # if only blue steer left (away)

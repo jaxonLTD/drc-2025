@@ -4,7 +4,7 @@ class DRCMotorController:
     def __init__(self, motorPin, servoPin):
         # GPIO13 & GPIO12 preferable
         # self.motor = PWMOutputDevice(pin=motorPin, frequency=100)
-        # self.servo = PWMOutputDevice(pin=servoPin, frequency=50)  
+        self.servo = PWMOutputDevice(pin=servoPin, frequency=50)  
         pass
 
     def setDrivingMotor(self, speed):
@@ -12,17 +12,18 @@ class DRCMotorController:
         pass
 
     def setServoMotor(self, angle):
-        # self.servo.value = angle
+        # angle from 0 to 1 with gpiozero
+        self.servo.value = angle
         pass
 
     def off (self):
         # self.motor.off()
-        # self.servo.off()
+        self.servo.off()
         pass
     
     def on (self):
         # self.motor.on()
-        # self.servo.on()
+        self.servo.on()
         pass
-    
+
 

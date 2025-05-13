@@ -8,10 +8,12 @@ class SlayMax:
         self.started = False
 
     def endLoop (self):
+        self.motorController.setServoMotor(angle=0.5)
         self.started = False
         pass
 
     def startLoop (self):
+        self.motorController.setServoMotor(angle=0.5)
         self.started = True
         pass
 
@@ -42,7 +44,7 @@ class SlayMax:
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-            
+
         cap.release()
         cv2.destroyAllWindows()
             
