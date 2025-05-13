@@ -34,13 +34,14 @@ class SlayMax:
 
             if (finish):
                 self.motorController.setServoMotor(angle=0.5)
+                self.motorController.setDrivingMotor(speed=0)
                 self.motorController.off()
                 self.started = False
 
             if (self.started == True):
                 #change drive motor later
                 self.motorController.setServoMotor(angle=steering)
-                self.motorController.setDrivingMotor(speed=0.1)
+                self.motorController.setDrivingMotor(speed=0.01)
             
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
