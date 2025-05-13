@@ -1,4 +1,5 @@
 from main import SlayMax
+from threading import Thread
 from flask import Flask, send_file
 
 app = Flask(__name__)
@@ -23,6 +24,19 @@ def stop_robot():
 def send_image():
     return send_file("./img.jpg", mimetype='image/jpeg')
 
-if __name__ == "__main__":
+
+def _run_bot ():
     bot.mainLoop()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+def _run_flask ():
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
+
+if __name__ == "__main__":
+    bot_thread = Thread(target=_run_bot)
+    flask_thread = Thread(target=_run_flask)
+
+    bot_thread.start()
+    flask_thread.start()
+
+    bot_thread.join()
+    flask_thread.join()
