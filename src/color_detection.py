@@ -17,7 +17,7 @@ def process_frame(frame):
     blue_upper = np.array([130, 255, 255])
     
     # left side of track range
-    yellow_lower = np.array([17, 91, 118])
+    yellow_lower = np.array([17, 62, 118])
     yellow_upper = np.array([150, 255, 255])
     
     # end of track range
