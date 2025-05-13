@@ -1,10 +1,9 @@
-
 import cv2
 import numpy as np
 
 def process_frame(frame):
     """
-        steering_value: float between 0 and 1 (0.5 is straight)
+        steering_value: float between 0.05 and 0.1 duty cycle (0.075 is straight)
         processed_frame: visualized frame with detected lines highlighted
         finish_detected: boolean indicating if finish line (green) is detected
     """
@@ -30,10 +29,6 @@ def process_frame(frame):
     yellow_mask = cv2.inRange(hsv_frame, yellow_lower, yellow_upper)
     green_mask = cv2.inRange(hsv_frame, green_lower, green_upper)
     
-    # blue_detected = cv2.bitwise_and(frame, frame, mask=blue_mask)
-    # yellow_detected = cv2.bitwise_and(frame, frame, mask=yellow_mask)
-    # green_detected = cv2.bitwise_and(frame, frame, mask=green_mask)
-    
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray_frame = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)  # bgr for displaying image
     
@@ -44,7 +39,7 @@ def process_frame(frame):
     green_pixels = cv2.countNonZero(green_mask)
     finish_detected = green_pixels > (width * height * 0.05)  # 5% of frame, increase if motors stop to early
     
-    # steering clac for mid of screen in bottom third
+    # steering calc for mid of screen in bottom third
     roi_height = height // 3
     bottom_region = hsv_frame[height - roi_height:height, :]
     
@@ -55,9 +50,10 @@ def process_frame(frame):
     blue_moments = cv2.moments(bottom_blue_mask)
     yellow_moments = cv2.moments(bottom_yellow_mask)
     
-    steering_value = 0.5 
+    # Default to center position (0.075 duty cycle)
+    steering_value = 0.075
     
-    #find both lines
+    # Find both lines
     if blue_moments["m00"] > 0 and yellow_moments["m00"] > 0:
         blue_x = int(blue_moments["m10"] / blue_moments["m00"])
         yellow_x = int(yellow_moments["m10"] / yellow_moments["m00"])
@@ -65,8 +61,9 @@ def process_frame(frame):
         # find center of lines
         center_x = (blue_x + yellow_x) // 2
         
-        # 0 = full left, 0.5 = center, 1 = full right
-        steering_value = center_x / width
+        # Map center_x from 0-width to 0.05-0.1 duty cycle
+        # 0 = left edge (0.05), width = right edge (0.1)
+        steering_value = 0.05 + (center_x / width) * 0.05
         
         # draw line for visuals
         print("both colors detected")
@@ -75,18 +72,24 @@ def process_frame(frame):
     # if only blue steer left (away)
     elif blue_moments["m00"] > 0: 
         blue_x = int(blue_moments["m10"] / blue_moments["m00"])
-        steering_value = 0.3 - (0.2 * (1 - (blue_x / width)))
+        # Map from 0-1 scale to 0.05-0.1 (with offset to steer away)
+        raw_steering = 0.3 - (0.2 * (1 - (blue_x / width)))
+        # Convert to 0.05-0.1 range
+        steering_value = 0.05 + raw_steering * 0.05
         
-    #if only yellow steer right (away)
+    # if only yellow steer right (away)
     elif yellow_moments["m00"] > 0:
         yellow_x = int(yellow_moments["m10"] / yellow_moments["m00"])
-        steering_value = 0.7 + (0.2 * (yellow_x / width))
+        # Map from 0-1 scale to 0.05-0.1 (with offset to steer away)
+        raw_steering = 0.7 + (0.2 * (yellow_x / width))
+        # Convert to 0.05-0.1 range
+        steering_value = 0.05 + raw_steering * 0.05
         
-    # Ensure steering value is between 0 and 1
-    steering_value = max(0, min(1, steering_value))
+    # Ensure steering value is between 0.05 and 0.1
+    steering_value = max(0.05, min(0.1, steering_value))
     
     # Add directional indicator to the frame
-    cv2.putText(processed_frame, f"Steering: {steering_value:.2f}", (10, 30), 
+    cv2.putText(processed_frame, f"Steering: {steering_value:.4f}", (10, 30), 
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
     
     if finish_detected:
