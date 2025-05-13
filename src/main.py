@@ -16,8 +16,8 @@ class SlayMax:
         pass
 
     def mainLoop (self):
+        cap = cv2.VideoCapture("/dev/video0")
         while True:
-            cap = cv2.VideoCapture("/dev/video0")
             ret, frame = cap.read()
             if not ret:
                 print("Error: Failed to grab frame.")
@@ -39,6 +39,12 @@ class SlayMax:
                 #change drive motor later
                 # self.motorController.setServoMotor(angle=steering)
                 pass
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            
+        cap.release()
+        cv2.destroyAllWindows()
             
         
 
