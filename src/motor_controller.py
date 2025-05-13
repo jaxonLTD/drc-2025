@@ -1,4 +1,4 @@
-from gpiozero import PWMOutputDevice, Device
+from gpiozero import PWMOutputDevice, Servo, Device
 from gpiozero.pins.rpigpio import RPiGPIOFactory
 
 class DRCMotorController:
@@ -6,7 +6,7 @@ class DRCMotorController:
         # GPIO13 & GPIO12 preferable
         # self.motor = PWMOutputDevice(pin=motorPin, frequency=100)
         Device.pin_factory = RPiGPIOFactory()
-        self.servo = PWMOutputDevice(pin=servoPin, frequency=50)  
+        self.servo = Servo(servoPin)  
         pass
 
     def setDrivingMotor(self, speed):

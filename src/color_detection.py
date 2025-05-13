@@ -3,7 +3,7 @@ import numpy as np
 
 def process_frame(frame):
     """
-        steering_value: float between 0.05 and 0.1 duty cycle (0.075 is straight)
+        steering_value: float between -1 and 1 (0 is straight)
         processed_frame: visualized frame with detected lines highlighted
         finish_detected: boolean indicating if finish line (green) is detected
     """
@@ -50,8 +50,8 @@ def process_frame(frame):
     blue_moments = cv2.moments(bottom_blue_mask)
     yellow_moments = cv2.moments(bottom_yellow_mask)
     
-    # Default to center position (0.075 duty cycle)
-    steering_value = 0.075
+    # Default to center position (0 for Servo library)
+    steering_value = 0.0
     
     # Find both lines
     if blue_moments["m00"] > 0 and yellow_moments["m00"] > 0:
@@ -61,9 +61,9 @@ def process_frame(frame):
         # find center of lines
         center_x = (blue_x + yellow_x) // 2
         
-        # Map center_x from 0-width to 0.05-0.1 duty cycle
-        # 0 = left edge (0.05), width = right edge (0.1)
-        steering_value = 0.05 + (center_x / width) * 0.05
+        # Map center_x from 0-width to -1 to 1
+        # 0 = left edge (-1), width/2 = center (0), width = right edge (1)
+        steering_value = (center_x - (width / 2)) / (width / 2)
         
         # draw line for visuals
         print("both colors detected")
@@ -72,24 +72,22 @@ def process_frame(frame):
     # if only blue steer left (away)
     elif blue_moments["m00"] > 0: 
         blue_x = int(blue_moments["m10"] / blue_moments["m00"])
-        # Map from 0-1 scale to 0.05-0.1 (with offset to steer away)
-        raw_steering = 0.3 - (0.2 * (1 - (blue_x / width)))
-        # Convert to 0.05-0.1 range
-        steering_value = 0.05 + raw_steering * 0.05
+        # Convert original 0-1 scale to -1 to 1 (shifting left)
+        raw_steering = 0.3 - (0.2 * (1 - (blue_x / width)))  # 0.1 to 0.3 range
+        steering_value = (raw_steering * 2) - 1  # Map 0-1 to -1 to 1
         
     # if only yellow steer right (away)
     elif yellow_moments["m00"] > 0:
         yellow_x = int(yellow_moments["m10"] / yellow_moments["m00"])
-        # Map from 0-1 scale to 0.05-0.1 (with offset to steer away)
-        raw_steering = 0.7 + (0.2 * (yellow_x / width))
-        # Convert to 0.05-0.1 range
-        steering_value = 0.05 + raw_steering * 0.05
+        # Convert original 0-1 scale to -1 to 1 (shifting right)
+        raw_steering = 0.7 + (0.2 * (yellow_x / width))  # 0.7 to 0.9 range
+        steering_value = (raw_steering * 2) - 1  # Map 0-1 to -1 to 1
         
-    # Ensure steering value is between 0.05 and 0.1
-    steering_value = max(0.05, min(0.1, steering_value))
+    # Ensure steering value is between -1 and 1
+    steering_value = max(-1.0, min(1.0, steering_value))
     
     # Add directional indicator to the frame
-    cv2.putText(processed_frame, f"Steering: {steering_value:.4f}", (10, 30), 
+    cv2.putText(processed_frame, f"Steering: {steering_value:.2f}", (10, 30), 
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
     
     if finish_detected:
