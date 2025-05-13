@@ -1,11 +1,11 @@
-from gpiozero import PWMOutputDevice, Servo, Device, Motor
+from gpiozero import PWMOutputDevice, Servo, Device
 from gpiozero.pins.rpigpio import RPiGPIOFactory
 
 class DRCMotorController:
     def __init__(self, motorPin, servoPin):
         # GPIO13 & GPIO12 preferable
         Device.pin_factory = RPiGPIOFactory()
-        self.motor = Motor(motorPin)
+        self.motor = Servo(motorPin)
         self.servo = Servo(servoPin)  
         pass
 
